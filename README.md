@@ -19,7 +19,7 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 
 | Item | Escolha | Motivo |
 |------|---------|--------|
-| Framework | Yii2 (`yiisoft/yii2-app-basic` como base) | Requisito. Usei o template **basic** (não o advanced) por ser mais enxuto para uma **API pura** — o advanced separa frontend/backend/console, o que seria overhead aqui. |
+| Framework | Yii2 (`yiisoft/yii2`) | Requisito. Organizei o projeto seguindo o padrão do template **basic** (pastas `controllers/`, `models/`, `config/`, `web/`), montado manualmente e **sem os assets de frontend** — mais enxuto para uma **API pura** do que o template *advanced* (que separa frontend/backend/console). |
 | Autenticação | JWT via `firebase/php-jwt` `^7.0` | O Yii2 **não** possui JWT nativo. Optei por uma biblioteca amplamente adotada e a isolei em um serviço (`JwtService`). Usei a linha **7.x** porque as 6.x têm um security advisory (CVE-2025-45769, LOW); a 7.x exige chave HS256 de no mínimo 32 bytes. |
 | Assets | Repositório `asset-packagist` | O core do Yii2 depende de bower-assets (jQuery etc.). Em vez do plugin legado `fxp/composer-asset-plugin`, declarei o repositório `asset-packagist` no `composer.json` — abordagem recomendada atual. |
 | Banco | MySQL 8 + Migrations | Requisito. Schema versionado com migrations (equivalente às EF Migrations). |
@@ -102,12 +102,12 @@ A API fica disponível em: **http://localhost:8080**
 Teste rápido:
 
 ```bash
-# Registrar um usuário
+# Registrar um usuário (a resposta já traz um token — auto-login)
 curl -X POST http://localhost:8080/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"teste@example.com","password":"secret123","password_confirm":"secret123"}'
 
-# Login (guarde o token retornado)
+# (Opcional) Login separado, caso já tenha uma conta — retorna o token
 curl -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"teste@example.com","password":"secret123"}'
@@ -149,7 +149,7 @@ docker compose exec php vendor/bin/codecept build
 docker compose exec -e DB_TEST_NAME=despesas_test php vendor/bin/codecept run Api
 ```
 
-Saída esperada: `OK (7 tests, 15 assertions)`.
+Saída esperada: `OK (7 tests, 16 assertions)`.
 
 Cobrem: registro/login, e-mail duplicado, senha inválida, criação/listagem de despesa, categoria inválida e — o mais importante — **um usuário não consegue acessar a despesa de outro**.
 
