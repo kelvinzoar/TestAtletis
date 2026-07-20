@@ -78,8 +78,9 @@ class Expense extends ActiveRecord
     }
 
     /**
-     * Campos expostos no JSON. Normalizamos `amount` para float e a data para
-     * string, deixando a resposta previsível para quem consome a API.
+     * Campos expostos no JSON. O `amount` é convertido para float (o PDO devolve
+     * a coluna DECIMAL como string); os demais campos saem como estão — a data já
+     * vem no formato ISO (Y-m-d). Isso deixa a resposta previsível para o cliente.
      */
     public function fields(): array
     {
