@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API de Despesas Pessoais — Swagger UI</title>
+    <!-- Assets do Swagger UI servidos localmente (funciona offline) -->
+    <link rel="stylesheet" href="./swagger-ui.css">
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="./swagger-ui-bundle.js"></script>
+    <script>
+        // Carrega a especificação gerada a partir das anotações (openapi.json).
+        window.onload = () => {
+            window.ui = SwaggerUIBundle({
+                url: './openapi.json',
+                dom_id: '#swagger-ui',
+                presets: [SwaggerUIBundle.presets.apis],
+                layout: 'BaseLayout',
+                deepLinking: true,
+            });
+        };
+    </script>
+</body>
+</html>

@@ -28,6 +28,7 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 | Camadas | Controllers → Services → Models | Regras de negócio ficam nos **serviços**; controllers apenas orquestram. Segue SOLID e a separação pedida no desafio. |
 | Erros | `ApiErrorHandler` centralizado | Formato de erro JSON padronizado, incluindo erros de validação por campo (HTTP 422). |
 | Testes | Codeception (suíte de API) | Cobre os principais endpoints, incluindo o isolamento de dados entre usuários. |
+| Documentação | `zircote/swagger-php` + Swagger UI | Docs interativas em `/docs`, geradas a partir de anotações OpenAPI no código (não desatualizam). Assets do Swagger UI embutidos localmente (funciona offline). |
 
 ### Destaques de segurança
 
@@ -156,7 +157,18 @@ Cobrem: registro/login, e-mail duplicado, senha inválida, criação/listagem de
 
 ## Documentação da API
 
-A especificação completa de endpoints, parâmetros e respostas está em **[API.md](API.md)**.
+Duas formas de consultar:
+
+1. **Swagger UI (interativo):** com o ambiente no ar, acesse **http://localhost:8080/docs** — permite testar os endpoints direto do navegador (inclusive autenticando com o token JWT no botão *Authorize*).
+2. **Markdown:** a especificação em texto está em **[API.md](API.md)**.
+
+O Swagger UI é gerado a partir de **anotações OpenAPI no próprio código** (atributos PHP 8 nos controllers, pasta `openapi/`). Para regenerar o spec após alterar as anotações:
+
+```bash
+docker compose exec php composer swagger
+```
+
+> Como usar o token no Swagger UI: rode `POST /auth/login`, copie o `token` da resposta, clique em **Authorize** (cadeado no topo), cole o token e confirme. As rotas protegidas passam a enviar o header automaticamente.
 
 ---
 
@@ -172,9 +184,11 @@ A especificação completa de endpoints, parâmetros e respostas está em **[API
 ├── migrations/        # criação das tabelas user e expense
 ├── models/            # User, Expense (ActiveRecord)
 │   └── forms/         # RegisterForm, LoginForm, ExpenseSearch (DTOs)
+├── openapi/           # anotações OpenAPI (definição global + schemas)
 ├── services/          # AuthService, JwtService, ExpenseService (regra de negócio)
 ├── tests/             # Codeception (suíte de API)
 ├── web/               # index.php (front controller)
+│   └── docs/          # Swagger UI + openapi.json (servidos estaticamente)
 ├── yii                # entrada de console (migrations)
 ├── docker-compose.yml
 ├── API.md

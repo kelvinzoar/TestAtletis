@@ -4,6 +4,8 @@ Base URL (ambiente local): `http://localhost:8080`
 
 Todas as requisições e respostas usam **JSON** (`Content-Type: application/json`).
 
+> 💡 Versão interativa (Swagger UI): **http://localhost:8080/docs** — permite testar os endpoints direto do navegador.
+
 ## Autenticação
 
 A API usa **JWT (Bearer Token)**. Após o login, envie o token no header de todas as rotas protegidas:

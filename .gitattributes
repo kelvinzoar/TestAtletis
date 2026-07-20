@@ -1,0 +1,8 @@
+# Marca os assets de terceiros (Swagger UI) como "vendored" para que o GitHub
+# Linguist NÃO os conte nas estatísticas de linguagem. Sem isso, o bundle
+# minificado (~1,4MB) faria o repositório parecer majoritariamente JavaScript.
+web/docs/swagger-ui-bundle.js linguist-vendored
+web/docs/swagger-ui.css       linguist-vendored
+
+# O openapi.json é gerado a partir das anotações; marca como gerado.
+web/docs/openapi.json         linguist-generated
