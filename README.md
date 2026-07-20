@@ -27,7 +27,7 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 | Categoria | `ENUM` no banco + validação no model | Dupla barreira de integridade para o conjunto restrito (alimentação, transporte, lazer). |
 | Camadas | Controllers → Services → Models | Regras de negócio ficam nos **serviços**; controllers apenas orquestram. Segue SOLID e a separação pedida no desafio. |
 | Erros | `ApiErrorHandler` centralizado | Formato de erro JSON padronizado, incluindo erros de validação por campo (HTTP 422). |
-| Testes | Codeception (suíte de API) | Cobre os principais endpoints, incluindo o isolamento de dados entre usuários. |
+| Testes | Codeception (suíte de API) | Cobre o CRUD completo e os fluxos de auth, incluindo o isolamento de dados entre usuários (IDOR). |
 | Documentação | `zircote/swagger-php` + Swagger UI | Docs interativas em `/docs`, geradas a partir de anotações OpenAPI no código (não desatualizam). Assets do Swagger UI embutidos localmente (funciona offline). |
 
 ### Destaques de segurança
@@ -149,9 +149,9 @@ docker compose exec php vendor/bin/codecept build
 docker compose exec -e DB_TEST_NAME=despesas_test php vendor/bin/codecept run Api
 ```
 
-Saída esperada: `OK (7 tests, 16 assertions)`.
+Saída esperada: `OK (12 tests, 33 assertions)`.
 
-Cobrem: registro/login, e-mail duplicado, senha inválida, criação/listagem de despesa, categoria inválida e — o mais importante — **um usuário não consegue acessar a despesa de outro**.
+Cobrem: registro/login (+ senha inválida e e-mail duplicado), **CRUD completo** de despesas (criar, listar, detalhar, editar, excluir), filtro por categoria e período, validação (categoria inválida, mês sem ano) e — o mais importante — **isolamento entre usuários**: um usuário não consegue ver, editar nem excluir a despesa de outro.
 
 ---
 

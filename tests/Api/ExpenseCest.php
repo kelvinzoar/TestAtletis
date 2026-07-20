@@ -75,6 +75,143 @@ class ExpenseCest
         $I->seeResponseCodeIs(404);
     }
 
+    public function detalhaDespesaPorId(ApiTester $I): void
+    {
+        $token = $this->novoUsuarioComToken($I, 'detalhe@example.com');
+        $I->amBearerAuthenticated($token);
+
+        $I->sendPost('/expenses', [
+            'description' => 'Livro',
+            'category' => 'lazer',
+            'amount' => 59.90,
+            'expense_date' => '2026-07-12',
+        ]);
+        $id = $I->grabDataFromResponseByJsonPath('$.expense.id')[0];
+
+        $I->sendGet("/expenses/{$id}");
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['expense' => ['id' => $id, 'description' => 'Livro']]);
+    }
+
+    public function editaDespesa(ApiTester $I): void
+    {
+        $token = $this->novoUsuarioComToken($I, 'edita@example.com');
+        $I->amBearerAuthenticated($token);
+
+        $I->sendPost('/expenses', [
+            'description' => 'Padaria',
+            'category' => 'alimentacao',
+            'amount' => 10.00,
+            'expense_date' => '2026-07-13',
+        ]);
+        $id = $I->grabDataFromResponseByJsonPath('$.expense.id')[0];
+
+        // Edita qualquer campo (PUT).
+        $I->sendPut("/expenses/{$id}", [
+            'description' => 'Padaria (corrigido)',
+            'category' => 'alimentacao',
+            'amount' => 15.50,
+            'expense_date' => '2026-07-13',
+        ]);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['expense' => ['description' => 'Padaria (corrigido)', 'amount' => 15.5]]);
+
+        // Confirma que a alteração persistiu.
+        $I->sendGet("/expenses/{$id}");
+        $I->seeResponseContainsJson(['expense' => ['description' => 'Padaria (corrigido)']]);
+    }
+
+    public function excluiDespesa(ApiTester $I): void
+    {
+        $token = $this->novoUsuarioComToken($I, 'exclui@example.com');
+        $I->amBearerAuthenticated($token);
+
+        $I->sendPost('/expenses', [
+            'description' => 'Cinema',
+            'category' => 'lazer',
+            'amount' => 30.00,
+            'expense_date' => '2026-07-14',
+        ]);
+        $id = $I->grabDataFromResponseByJsonPath('$.expense.id')[0];
+
+        $I->sendDelete("/expenses/{$id}");
+        $I->seeResponseCodeIs(204);
+
+        // Após excluir, consultar a mesma despesa deve dar 404.
+        $I->sendGet("/expenses/{$id}");
+        $I->seeResponseCodeIs(404);
+    }
+
+    public function naoEditaNemExcluiDespesaDeOutroUsuario(ApiTester $I): void
+    {
+        // Usuário A cria uma despesa.
+        $tokenA = $this->novoUsuarioComToken($I, 'donoA@example.com');
+        $I->amBearerAuthenticated($tokenA);
+        $I->sendPost('/expenses', [
+            'description' => 'Gasolina',
+            'category' => 'transporte',
+            'amount' => 200.00,
+            'expense_date' => '2026-07-15',
+        ]);
+        $id = $I->grabDataFromResponseByJsonPath('$.expense.id')[0];
+
+        // Usuário B não pode editar nem excluir a despesa de A -> 404 nos dois.
+        $tokenB = $this->novoUsuarioComToken($I, 'donoB@example.com');
+        $I->amBearerAuthenticated($tokenB);
+
+        $I->sendPut("/expenses/{$id}", [
+            'description' => 'Invadido',
+            'category' => 'lazer',
+            'amount' => 1.00,
+            'expense_date' => '2026-07-15',
+        ]);
+        $I->seeResponseCodeIs(404);
+
+        $I->sendDelete("/expenses/{$id}");
+        $I->seeResponseCodeIs(404);
+
+        // Garante que a despesa de A continua intacta.
+        $I->amBearerAuthenticated($tokenA);
+        $I->sendGet("/expenses/{$id}");
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['expense' => ['description' => 'Gasolina']]);
+    }
+
+    public function filtraPorCategoriaEPeriodo(ApiTester $I): void
+    {
+        $token = $this->novoUsuarioComToken($I, 'filtro@example.com');
+        $I->amBearerAuthenticated($token);
+
+        // Duas despesas em meses/categorias diferentes.
+        $I->sendPost('/expenses', [
+            'description' => 'Mercado julho',
+            'category' => 'alimentacao',
+            'amount' => 80.00,
+            'expense_date' => '2026-07-05',
+        ]);
+        $I->sendPost('/expenses', [
+            'description' => 'Onibus junho',
+            'category' => 'transporte',
+            'amount' => 20.00,
+            'expense_date' => '2026-06-05',
+        ]);
+
+        // Filtro por categoria -> só a de transporte (total 1).
+        $I->sendGet('/expenses?category=transporte');
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['pagination' => ['total' => 1]]);
+        $I->seeResponseContainsJson(['items' => [['description' => 'Onibus junho']]]);
+
+        // Filtro por período (junho/2026) -> só a de junho (total 1).
+        $I->sendGet('/expenses?year=2026&month=6');
+        $I->seeResponseContainsJson(['pagination' => ['total' => 1]]);
+        $I->seeResponseContainsJson(['items' => [['description' => 'Onibus junho']]]);
+
+        // Filtrar por mês sem informar o ano -> 422.
+        $I->sendGet('/expenses?month=6');
+        $I->seeResponseCodeIs(422);
+    }
+
     /**
      * Helper: registra um usuário e devolve um token JWT válido.
      */
