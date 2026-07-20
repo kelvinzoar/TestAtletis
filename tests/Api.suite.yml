@@ -1,0 +1,15 @@
+# Suíte de testes de API (funcionais).
+#
+# Rodam as requisições ATRAVÉS da aplicação Yii (sem precisar de servidor web),
+# usando o banco de teste. `cleanup: true` envolve cada teste numa transação e
+# faz rollback ao final, então um teste não interfere no outro.
+actor: ApiTester
+modules:
+    enabled:
+        - Yii2:
+            configFile: 'config/test.php'
+            cleanup: true
+        - REST:
+            depends: Yii2
+            part: Json
+        - Asserts

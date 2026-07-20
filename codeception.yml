@@ -1,0 +1,14 @@
+# Configuração raiz do Codeception (framework de testes do ecossistema Yii2).
+# Analogia C#: um "xunit.runner.json" + estrutura de projeto de testes.
+namespace: Tests
+paths:
+    tests: tests
+    output: tests/_output
+    support: tests/Support
+    data: tests/_data
+# Bootstrap global (relativo a paths.tests): carrega o framework Yii,
+# definindo a classe global `Yii` antes de qualquer teste rodar.
+bootstrap: _bootstrap.php
+settings:
+    shuffle: false
+    lint: true
