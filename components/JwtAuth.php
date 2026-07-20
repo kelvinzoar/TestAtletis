@@ -11,9 +11,8 @@ use yii\web\User;
 /**
  * Método de autenticação por JWT no header "Authorization: Bearer <token>".
  *
- * É um filtro de action (behavior) aplicado nos controllers protegidos.
- * Analogia C#: um middleware/AuthenticationHandler que lê o Bearer token e
- * popula o usuário atual (o atributo [Authorize] passa a valer).
+ * É um filtro de action (behavior) aplicado nos controllers protegidos: lê o token
+ * Bearer do header, valida e popula o usuário autenticado da requisição.
  *
  * Recebe o JwtService por injeção no construtor (autowiring do container de DI).
  */

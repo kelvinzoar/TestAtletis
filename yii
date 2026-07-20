@@ -3,8 +3,7 @@
 
 /**
  * Ponto de entrada de linha de comando (console).
- * Usado para rodar as migrations: `php yii migrate`.
- * Analogia C#: equivale ao `dotnet ef database update` / comandos de CLI.
+ * Usado para rodar as migrations (`php yii migrate`) e outros comandos de console.
  */
 
 defined('YII_DEBUG') or define('YII_DEBUG', getenv('YII_DEBUG') === 'true' ?: true);

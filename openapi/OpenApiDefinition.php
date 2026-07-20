@@ -10,9 +10,6 @@ use OpenApi\Attributes as OA;
  * Esta classe não tem lógica: serve apenas de "âncora" para os atributos de
  * nível superior do OpenAPI (informações da API, servidor, esquema de segurança
  * e tags). O swagger-php varre estes atributos ao gerar o openapi.json.
- *
- * Analogia C#: equivale à configuração do AddSwaggerGen(...) no Program.cs do
- * ASP.NET Core (título, versão, definição do Bearer JWT).
  */
 #[OA\Info(
     version: '1.0.0',

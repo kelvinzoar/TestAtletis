@@ -1,5 +1,4 @@
 # Configuração raiz do Codeception (framework de testes do ecossistema Yii2).
-# Analogia C#: um "xunit.runner.json" + estrutura de projeto de testes.
 namespace: Tests
 paths:
     tests: tests

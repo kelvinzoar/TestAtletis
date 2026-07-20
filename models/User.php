@@ -11,8 +11,8 @@ use yii\web\IdentityInterface;
  * Model do usuário (tabela `user`).
  *
  * Herda de ActiveRecord (padrão Active Record): o objeto é, ao mesmo tempo, a
- * entidade e o acesso a dados. Analogia C#: como se a entidade do EF Core e o
- * DbSet estivessem fundidos na mesma classe.
+ * entidade e a camada de acesso a dados (a mesma classe representa a tabela e
+ * cuida de persistir e consultar os registros).
  *
  * Implementa IdentityInterface para que o Yii saiba como representar o usuário
  * autenticado (Yii::$app->user->identity).
@@ -32,8 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Preenche created_at/updated_at automaticamente (timestamps Unix).
-     * Analogia C#: interceptors de SaveChanges no EF Core.
+     * Preenche created_at/updated_at automaticamente (timestamps Unix) ao salvar.
      */
     public function behaviors(): array
     {
@@ -43,8 +42,8 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Regras de validação — a integridade dos dados é garantida no model.
-     * Analogia C#: Data Annotations ([Required], [EmailAddress]) centralizadas.
+     * Regras de validação — a integridade dos dados é garantida no model,
+     * centralizadas num único método (obrigatoriedade, formato de e-mail, unicidade).
      */
     public function rules(): array
     {
@@ -101,7 +100,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Nunca armazenamos a senha em texto puro: guardamos o hash (bcrypt via
-     * componente de segurança do Yii). Analogia C#: PasswordHasher do Identity.
+     * componente de segurança do Yii).
      */
     public function setPassword(string $password): void
     {
@@ -114,7 +113,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Relação 1:N com Expense. Analogia C#: propriedade de navegação no EF Core.
+     * Relação 1:N com Expense (um usuário tem muitas despesas).
      */
     public function getExpenses(): \yii\db\ActiveQuery
     {

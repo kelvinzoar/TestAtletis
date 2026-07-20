@@ -2,9 +2,6 @@
 # Ambiente de desenvolvimento completo: PHP-FPM + Nginx + MySQL.
 # Subir tudo:   docker compose up -d --build
 # Derrubar:     docker compose down          (add -v para apagar o banco)
-#
-# Analogia C#: equivale a orquestrar (Kestrel + SQL Server) via
-# docker-compose para rodar uma Web API + banco localmente.
 # ------------------------------------------------------------------
 services:
   # Banco de dados MySQL 8

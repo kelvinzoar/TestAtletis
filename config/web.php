@@ -2,7 +2,7 @@
 
 /**
  * Configuração da aplicação WEB (API).
- * Aqui montamos os componentes (equivalente ao "ConfigureServices/Startup" do ASP.NET).
+ * Aqui montamos os componentes da aplicação (request, response, banco, roteamento, DI).
  */
 
 $params = require __DIR__ . '/params.php';
@@ -50,7 +50,7 @@ $config = [
 
         'db' => $db,
 
-        // Roteamento REST (equivalente aos atributos [HttpGet]/[Route] do ASP.NET).
+        // Roteamento REST: mapeia método + caminho HTTP para as actions dos controllers.
         // enableStrictParsing => rotas não declaradas retornam 404 (nada de rotas "mágicas").
         'urlManager' => [
             'enablePrettyUrl' => true,

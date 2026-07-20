@@ -11,7 +11,6 @@ use yii\base\Model;
  * Por que uma classe separada do model User? Para separar a "forma dos dados que
  * chegam pela API" da "entidade persistida". Aqui validamos a confirmação de
  * senha e a unicidade do e-mail antes de criar o usuário.
- * Analogia C#: um RegisterRequest DTO com DataAnnotations.
  */
 class RegisterForm extends Model
 {

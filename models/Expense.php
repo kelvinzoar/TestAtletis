@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
 class Expense extends ActiveRecord
 {
     // Categorias permitidas expostas como constantes: evita "strings mágicas"
-    // espalhadas pelo código (mesma ideia de um enum em C#).
+    // espalhadas pelo código.
     public const CATEGORY_FOOD = 'alimentacao';
     public const CATEGORY_TRANSPORT = 'transporte';
     public const CATEGORY_LEISURE = 'lazer';
@@ -55,7 +55,6 @@ class Expense extends ActiveRecord
      * atribuição em massa (via load()/setAttributes()). Assim, o cliente não
      * consegue forjar o dono da despesa pelo corpo da requisição — o user_id é
      * definido apenas pelo servidor, a partir do usuário autenticado.
-     * (Em C# seria o equivalente a proteger contra over-posting com um DTO.)
      */
     public function rules(): array
     {

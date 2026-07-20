@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Cria a tabela `user`.
  *
- * Migrations versionam o schema do banco (equivalente às EF Migrations do C#).
+ * Migrations versionam o schema do banco de forma incremental e reversível.
  * Usamos safeUp/safeDown: rodam dentro de uma transação, então em caso de erro
  * o banco não fica num estado parcial.
  */

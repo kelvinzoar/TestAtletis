@@ -7,9 +7,6 @@
  * que controllers e componentes recebam os serviços por injeção no construtor,
  * favorecendo os princípios SOLID (em especial o D — inversão de dependência)
  * e facilitando testes (é possível trocar por mocks).
- *
- * Analogia C#: equivale ao `builder.Services.AddSingleton<IExpenseService, ExpenseService>()`
- * do ASP.NET Core.
  */
 
 use app\services\AuthService;

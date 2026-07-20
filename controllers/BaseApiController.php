@@ -14,8 +14,6 @@ use yii\web\Response;
  * Herda de yii\rest\Controller (que já traz negociação de conteúdo, filtro de
  * verbos HTTP e serialização). Aqui adicionamos a autenticação JWT como behavior
  * padrão para todas as actions.
- *
- * Analogia C#: uma classe base [ApiController] com [Authorize] aplicado por padrão.
  */
 class BaseApiController extends Controller
 {

@@ -17,7 +17,7 @@
 # Classes auxiliares geradas pelo Codeception (recriadas com `codecept build`)
 /tests/Support/_generated/
 
-# IDE e ferramentas locais
+# IDE
 /.idea/
 /.vscode/*
 !/.vscode/extensions.json

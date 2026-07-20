@@ -2,7 +2,7 @@
 
 /**
  * Ponto de entrada HTTP da aplicação (front controller).
- * Toda requisição web passa por aqui — é o "Program.cs / Startup" da nossa API.
+ * Toda requisição web passa por aqui: cria a aplicação e roda o ciclo requisição→resposta.
  */
 
 // YII_DEBUG=true mostra stack traces detalhados; em produção deve ser false.

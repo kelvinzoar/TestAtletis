@@ -3,7 +3,6 @@
 /**
  * Configuração da conexão com o banco (yii\db\Connection).
  * Os dados vêm de variáveis de ambiente (12-factor app), nunca hardcoded.
- * Analogia C#: é a "ConnectionString" do appsettings, montada a partir do ambiente.
  */
 return [
     'class' => yii\db\Connection::class,

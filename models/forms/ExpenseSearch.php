@@ -12,7 +12,6 @@ use yii\data\ActiveDataProvider;
  * Concentra em um só lugar as regras de: filtro por categoria e por período
  * (mês/ano), ordenação por data e paginação. Isso mantém o controller magro e
  * as regras de consulta testáveis.
- * Analogia C#: um objeto de query/filtro que você passaria a um repositório.
  */
 class ExpenseSearch extends Model
 {

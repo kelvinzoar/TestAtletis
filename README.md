@@ -22,7 +22,7 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 | Framework | Yii2 (`yiisoft/yii2`) | Requisito. Organizei o projeto seguindo o padrão do template **basic** (pastas `controllers/`, `models/`, `config/`, `web/`), montado manualmente e **sem os assets de frontend** — mais enxuto para uma **API pura** do que o template *advanced* (que separa frontend/backend/console). |
 | Autenticação | JWT via `firebase/php-jwt` `^7.0` | O Yii2 **não** possui JWT nativo. Optei por uma biblioteca amplamente adotada e a isolei em um serviço (`JwtService`). Usei a linha **7.x** porque as 6.x têm um security advisory (CVE-2025-45769, LOW); a 7.x exige chave HS256 de no mínimo 32 bytes. |
 | Assets | Repositório `asset-packagist` | O core do Yii2 depende de bower-assets (jQuery etc.). Em vez do plugin legado `fxp/composer-asset-plugin`, declarei o repositório `asset-packagist` no `composer.json` — abordagem recomendada atual. |
-| Banco | MySQL 8 + Migrations | Requisito. Schema versionado com migrations (equivalente às EF Migrations). |
+| Banco | MySQL 8 + Migrations | Requisito. Schema versionado com migrations. |
 | Dinheiro | `DECIMAL(10,2)` | Evita erros de arredondamento de ponto flutuante. Nunca `float` para valores monetários. |
 | Categoria | `ENUM` no banco + validação no model | Dupla barreira de integridade para o conjunto restrito (alimentação, transporte, lazer). |
 | Camadas | Controllers → Services → Models | Regras de negócio ficam nos **serviços**; controllers apenas orquestram. Segue SOLID e a separação pedida no desafio. |
@@ -75,7 +75,7 @@ Responsabilidades por camada:
 - **Models**: `User`, `Expense` (ActiveRecord + validações) e forms (`RegisterForm`, `LoginForm`, `ExpenseSearch`) como DTOs de entrada.
 - **Components**: `JwtAuth` (autenticação) e `ApiErrorHandler` (erros JSON).
 
-> Todo o código está comentado explicando **o porquê** de cada decisão, com analogias ao ecossistema C#/.NET onde ajuda.
+> Todo o código está comentado explicando **o porquê** de cada decisão.
 
 ---
 
