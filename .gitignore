@@ -1,0 +1,23 @@
+# Dependências instaladas pelo Composer (reconstruídas com `composer install`)
+/vendor/
+
+# Segredos e configuração local
+/.env
+
+# Arquivos temporários gerados em runtime pelo Yii
+/runtime/*
+!/runtime/.gitkeep
+/web/assets/*
+!/web/assets/.gitkeep
+
+# Saída dos testes (Codeception)
+/tests/_output/*
+!/tests/_output/.gitkeep
+
+# Classes auxiliares geradas pelo Codeception (recriadas com `codecept build`)
+/tests/Support/_generated/
+
+# IDE
+/.idea/
+/.vscode/*
+!/.vscode/extensions.json
