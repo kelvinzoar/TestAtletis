@@ -55,10 +55,12 @@ Exemplo de erro de validação (422):
 | `password` | string | sim | mínimo 6 caracteres |
 | `password_confirm` | string | sim | deve ser igual a `password` |
 
-**Resposta `201 Created`**
+**Resposta `201 Created`** — o usuário já é criado autenticado (retorna o token, evitando uma chamada extra a `/auth/login`):
 
 ```json
 {
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "expires_in": 3600,
     "user": {
         "id": 1,
         "email": "teste@example.com",

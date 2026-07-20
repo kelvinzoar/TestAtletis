@@ -26,6 +26,8 @@ class AuthCest
         $I->seeResponseContainsJson(['user' => ['email' => 'joao@example.com']]);
         // Garante que o hash da senha NUNCA é exposto na resposta.
         $I->dontSeeResponseContainsJson(['user' => ['password_hash' => true]]);
+        // O registro já faz auto-login: deve vir um token na resposta.
+        $I->seeResponseJsonMatchesJsonPath('$.token');
 
         $I->sendPost('/auth/login', [
             'email' => 'joao@example.com',

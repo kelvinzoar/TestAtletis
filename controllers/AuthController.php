@@ -53,8 +53,10 @@ class AuthController extends BaseApiController
         responses: [
             new OA\Response(
                 response: 201,
-                description: 'Usuário criado',
+                description: 'Usuário criado (já autenticado, com token)',
                 content: new OA\JsonContent(properties: [
+                    new OA\Property(property: 'token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...'),
+                    new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
                     new OA\Property(property: 'user', ref: '#/components/schemas/User'),
                 ])
             ),
@@ -76,12 +78,13 @@ class AuthController extends BaseApiController
             throw new ValidationException($form->getErrors());
         }
 
-        $user = $this->authService->register($form);
+        // register() já cria o usuário e emite o token (auto-login).
+        $result = $this->authService->register($form);
 
         // 201 Created é a resposta semântica para criação de recurso.
         Yii::$app->response->setStatusCode(201);
 
-        return ['user' => $user];
+        return $result;
     }
 
     /**

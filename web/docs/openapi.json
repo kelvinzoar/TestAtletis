@@ -55,11 +55,19 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usuário criado",
+                        "description": "Usuário criado (já autenticado, com token)",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        },
                                         "user": {
                                             "$ref": "#/components/schemas/User"
                                         }

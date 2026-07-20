@@ -22,11 +22,14 @@ class AuthService
     }
 
     /**
-     * Cria um novo usuário a partir de um RegisterForm JÁ VALIDADO.
+     * Cria um novo usuário a partir de um RegisterForm JÁ VALIDADO e já emite um
+     * token (auto-login), evitando que o cliente precise chamar /auth/login logo
+     * em seguida. O formato de retorno é o mesmo do login, por consistência.
      *
+     * @return array{token: string, expires_in: int, user: User}
      * @throws ValidationException se o model não passar nas suas próprias regras.
      */
-    public function register(RegisterForm $form): User
+    public function register(RegisterForm $form): array
     {
         $user = new User();
         $user->email = $form->email;
@@ -38,7 +41,7 @@ class AuthService
             throw new ValidationException($user->getErrors());
         }
 
-        return $user;
+        return $this->jwt->issueToken($user) + ['user' => $user];
     }
 
     /**
