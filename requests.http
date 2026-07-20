@@ -1,0 +1,135 @@
+###############################################################################
+# Coleção de requisições da API de Despesas Pessoais
+#
+# Como usar:
+#   1) Instale a extensão "REST Client" (Huachao Mao) no VSCode.
+#   2) Suba o ambiente: docker compose up -d
+#   3) Clique em "Send Request" (aparece acima de cada requisição).
+#
+# O token do login é capturado automaticamente (variável {{authToken}}),
+# então basta rodar o LOGIN uma vez e as demais chamadas já usam o token.
+###############################################################################
+
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+# Token capturado da resposta do login (ver requisição @name login abaixo)
+@authToken = {{login.response.body.$.token}}
+# Id da despesa criada (ver requisição @name criarDespesa abaixo)
+@expenseId = {{criarDespesa.response.body.$.expense.id}}
+
+
+### 1) Registrar usuário  (espera 201)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "teste@example.com",
+  "password": "secret123",
+  "password_confirm": "secret123"
+}
+
+
+### 2) Login  (espera 200 + token)  -> roda esta ANTES das rotas protegidas
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "teste@example.com",
+  "password": "secret123"
+}
+
+
+### 3) Criar despesa  (espera 201)  -> o acento "ç" funciona aqui (envio UTF-8)
+# @name criarDespesa
+POST {{baseUrl}}/expenses
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "description": "Almoço no centro",
+  "category": "alimentacao",
+  "amount": 42.90,
+  "expense_date": "2026-07-10"
+}
+
+
+### 4) Criar uma segunda despesa (transporte, mês diferente)
+POST {{baseUrl}}/expenses
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "description": "Uber",
+  "category": "transporte",
+  "amount": 25.00,
+  "expense_date": "2026-06-15"
+}
+
+
+### 5) Listar todas as despesas  (espera itens + pagination)
+GET {{baseUrl}}/expenses
+Authorization: Bearer {{authToken}}
+
+
+### 6) Filtrar por categoria
+GET {{baseUrl}}/expenses?category=alimentacao
+Authorization: Bearer {{authToken}}
+
+
+### 7) Filtrar por período (mês/ano)
+GET {{baseUrl}}/expenses?year=2026&month=6
+Authorization: Bearer {{authToken}}
+
+
+### 8) Ordenar por data ascendente + paginação
+GET {{baseUrl}}/expenses?sort=asc&page=1&per_page=10
+Authorization: Bearer {{authToken}}
+
+
+### 9) Detalhar uma despesa pelo id
+GET {{baseUrl}}/expenses/{{expenseId}}
+Authorization: Bearer {{authToken}}
+
+
+### 10) Editar despesa (PATCH — pode alterar qualquer campo)
+PATCH {{baseUrl}}/expenses/{{expenseId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 99.99,
+  "category": "lazer"
+}
+
+
+### 11) Excluir despesa  (espera 204 sem corpo)
+DELETE {{baseUrl}}/expenses/{{expenseId}}
+Authorization: Bearer {{authToken}}
+
+
+###############################################################################
+# Casos de erro (para demonstrar as validações)
+###############################################################################
+
+### 12) Sem token  (espera 401)
+GET {{baseUrl}}/expenses
+
+
+### 13) Categoria inválida  (espera 422 + errors)
+POST {{baseUrl}}/expenses
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "description": "Curso de PHP",
+  "category": "educacao",
+  "amount": 100,
+  "expense_date": "2026-01-01"
+}
+
+
+### 14) Filtrar por mês sem informar o ano  (espera 422)
+GET {{baseUrl}}/expenses?month=6
+Authorization: Bearer {{authToken}}
