@@ -12,6 +12,7 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 - [Como rodar os testes](#como-rodar-os-testes)
 - [Documentação da API](#documentação-da-api)
 - [Estrutura de pastas](#estrutura-de-pastas)
+- [Escopo e próximos passos](#escopo-e-próximos-passos)
 
 ---
 
@@ -29,6 +30,8 @@ API RESTful construída com **PHP 8.2 + Yii2**, autenticação **JWT**, banco **
 | Erros | `ApiErrorHandler` centralizado | Formato de erro JSON padronizado, incluindo erros de validação por campo (HTTP 422). |
 | Testes | Codeception (suíte de API) | Cobre o CRUD completo e os fluxos de auth, incluindo o isolamento de dados entre usuários (IDOR). |
 | Documentação | `zircote/swagger-php` + Swagger UI | Docs interativas em `/docs`, geradas a partir de anotações OpenAPI no código (não desatualizam). Assets do Swagger UI embutidos localmente (funciona offline). |
+
+> **Dependências:** os ranges são conservadores (`~`/`^`, para receber correções de segurança sem breaking changes) e o **`composer.lock` é versionado** — garante builds reprodutíveis (mesmas versões em qualquer máquina).
 
 ### Destaques de segurança
 
@@ -194,3 +197,15 @@ docker compose exec php composer swagger
 ├── API.md
 └── README.md
 ```
+
+---
+
+## Escopo e próximos passos
+
+Decisões conscientes de escopo para este desafio, e o que eu faria em um cenário de produção:
+
+- **Revogação de token:** o JWT é stateless, então não há logout/revogação antes do vencimento — mitigado por um TTL curto (1h). Evolução: refresh token com rotação ou blocklist (ex.: Redis).
+- **PATCH:** hoje funciona como alias de PUT (exige o corpo completo). Um PATCH com atualização parcial (merge) seria o próximo passo.
+- **Docker:** otimizado para desenvolvimento (código montado por volume). Em produção: `COPY` do código na imagem, `composer install --no-dev` e opcache.
+- **Categorias:** modeladas como `ENUM` (conjunto fixo do enunciado); uma tabela de lookup daria flexibilidade para categorias dinâmicas.
+- **Testes:** cobrem os endpoints (funcionais); testes unitários puros e um pipeline de CI (GitHub Actions) seriam o complemento natural.
